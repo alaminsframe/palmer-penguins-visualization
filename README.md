@@ -1,5 +1,7 @@
 # Palmer Penguins Data Visualization Analysis
 
+🌐 **Live Demo:** [https://alaminsframe.github.io/palmer-penguins-visualization/](https://alaminsframe.github.io/palmer-penguins-visualization/)
+
 ## Overview
 This repository presents a publication-style statistical analysis and 
 visualization of the Palmer Penguins dataset, demonstrating exploratory 
