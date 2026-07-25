@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morphological Differentiation Among Palmer Archipelago Penguins</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --surface-subtle: #F1F5F9;
+    --border: #E2E8F0;
+    --border-hover: #CBD5E1;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    --accent: #0284C7;
+    --accent-soft: #E0F2FE;
+    --adelie: #6366F1;
+    --adelie-soft: #EEF2FF;
+    --chinstrap: #0D9488;
+    --chinstrap-soft: #CCFBF1;
+    --gentoo: #D97706;
+    --gentoo-soft: #FEF3C7;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  a:hover {
+    color: #0369A1;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* ---------- Top Sticky Navigation Header ---------- */
+  header.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    width: 100%;
+  }
+
+  .header-container {
+    max-width: 1080px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+
+  .brand-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  /* Navigation Links */
+  nav.site-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+    background: var(--surface-subtle);
+  }
+
+  .nav-link.active {
+    color: var(--accent);
+    background: var(--accent-soft);
+    font-weight: 600;
+  }
+
+  /* Legend Pill Badges */
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--surface-subtle);
+    padding: 6px 12px;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot.adelie { background: var(--adelie); }
+  .dot.chinstrap { background: var(--chinstrap); }
+  .dot.gentoo { background: var(--gentoo); }
+
+  /* Mobile Nav Toggle */
+  .nav-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    cursor: pointer;
+    color: var(--text-primary);
+  }
+
+  .nav-toggle:hover {
+    background: var(--surface-subtle);
+  }
+
+  /* ---------- Main Container ---------- */
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 64px 24px;
+  }
+
+  section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-of-type {
+    border-bottom: none;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid #BAE6FD;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- Hero Section ---------- */
+  .hero {
+    padding-top: 48px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 4.5vw, 2.85rem);
+    line-height: 1.15;
+    max-width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .hero p.lede {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 100%;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 36px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    box-shadow: var(--shadow-sm);
+    border-top: 4px solid var(--card-color, var(--accent));
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-card .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+
+  .stat-card .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-top: 8px;
+  }
+
+  /* ---------- Section Headers & Elements ---------- */
+  h2.section-title {
+    font-size: 1.75rem;
+    margin-bottom: 10px;
+  }
+
+  p.section-intro {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 100%;
+    margin-bottom: 32px;
+    line-height: 1.65;
+  }
+
+  /* ---------- Data Table ---------- */
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.925rem;
+    text-align: left;
+  }
+
+  th, td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    background: var(--surface-subtle);
+  }
+
+  td {
+    color: var(--text-primary);
+  }
+
+  td.num, th.num {
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: right;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: #F8FAFC;
+  }
+
+  .table-species {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+
+  /* ---------- Figure Cards & Grids ---------- */
+  .figure-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  .figure-single {
+    margin-top: 24px;
+  }
+
+  figure {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease;
+  }
+
+  figure:hover {
+    border-color: var(--border-hover);
+  }
+
+  .img-container {
+    padding: 16px;
+    background: var(--surface-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+    display: block;
+    object-fit: contain;
+  }
+
+  figcaption {
+    padding: 16px 20px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    background: var(--surface);
+  }
+
+  figcaption strong {
+    color: var(--text-primary);
+    display: block;
+    font-weight: 600;
+    font-size: 0.94rem;
+    margin-bottom: 4px;
+  }
+
+  /* ---------- Results Article Box ---------- */
+  article.results {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  article.results p {
+    font-size: 1.025rem;
+    line-height: 1.75;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    max-width: 100%;
+  }
+
+  article.results p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---------- Methods Grid & Badges ---------- */
+  .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .method-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .method-card h3 {
+    font-size: 1.1rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .methods-grid ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-secondary);
+    font-size: 0.925rem;
+    line-height: 1.65;
+  }
+
+  .methods-grid li {
+    margin-bottom: 8px;
+  }
+
+  .methods-grid li:last-child {
+    margin-bottom: 0;
+  }
+
+  .tech-pill {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    background: var(--surface-subtle);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin: 2px 2px 2px 0;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  footer .citation {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  footer .citation p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+
+  footer .citation p:last-child {
+    margin-bottom: 0;
+  }
+
+  footer .byline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* ---------- Mobile Responsiveness ---------- */
+  @media (max-width: 900px) {
+    .header-container {
+      height: auto;
+      padding: 12px 16px;
+      flex-wrap: wrap;
+    }
+
+    .legend {
+      order: 3;
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .nav-toggle {
+      display: block;
+    }
+
+    nav.site-nav {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      padding: 12px 0 4px 0;
+      border-top: 1px solid var(--border);
+      order: 4;
+    }
+
+    nav.site-nav.open {
+      display: flex;
+    }
+
+    .nav-link {
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  @media (max-width: 680px) {
+    main {
+      padding: 0 16px 48px 16px;
+    }
+
+    section {
+      padding: 40px 0;
+    }
+
+    .hero {
+      padding-top: 32px;
+    }
+
+    .stat-row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .figure-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .methods-grid {
+      grid-template-columns: 1fr;
+    }
+
+    article.results {
+      padding: 20px;
+    }
+
+    footer .byline {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .stat-card { transition: none; }
+  }
+
+  /* ---------- Print Styles for PDF Export ---------- */
+  @media print {
+    body {
+      background: #FFFFFF !important;
+      color: #0F172A !important;
+      font-size: 10.5pt;
+    }
+    
+    header.site-header {
+      position: static !important;
+      box-shadow: none !important;
+      border-bottom: 2px solid #E2E8F0 !important;
+      padding-bottom: 8px;
+    }
+
+    .nav-toggle, nav.site-nav {
+      display: none !important;
+    }
+
+    .legend {
+      border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+    }
+
+    main {
+      max-width: 100% !important;
+      padding: 0 !important;
+    }
+
+    section {
+      padding: 24px 0 !important;
+      page-break-inside: avoid;
+    }
+
+    .stat-row {
+      gap: 12px !important;
+    }
+
+    .stat-card, figure, article.results, .method-card, .table-wrapper {
+      page-break-inside: avoid;
+      box-shadow: none !important;
+      border: 1px solid #CBD5E1 !important;
+    }
+
+    .figure-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 16px !important;
+    }
+
+    a {
+      text-decoration: none !important;
+      color: #0F172A !important;
+    }
+
+    @page {
+      size: A4;
+      margin: 1.5cm;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-container">
+    <a href="#hero" class="brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 6v6l4 2"/>
+      </svg>
+      <span class="brand-text">Palmer Penguins</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <nav class="site-nav" id="siteNav">
+      <a href="#distribution" class="nav-link">Distribution</a>
+      <a href="#bill-morphology" class="nav-link">Bill Morphology</a>
+      <a href="#body-mass" class="nav-link">Body Mass</a>
+      <a href="#results" class="nav-link">Results</a>
+      <a href="#methods" class="nav-link">Methods</a>
+    </nav>
+
+    <div class="legend">
+      <span class="legend-item"><span class="dot adelie"></span>Adelie</span>
+      <span class="legend-item"><span class="dot chinstrap"></span>Chinstrap</span>
+      <span class="legend-item"><span class="dot gentoo"></span>Gentoo</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" id="hero">
+    <span class="eyebrow">Palmer Archipelago &middot; Antarctica LTER</span>
+    <h1>Morphological Differences Among Palmer Archipelago Penguins</h1>
+    <p class="lede">
+      A clear, data-driven look at how Adelie, Chinstrap, and Gentoo penguins differ in
+      bill shape, body weight, and island habitats using R and Python.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-card" style="--card-color:var(--adelie)">
+        <div class="num">146</div>
+        <div class="label"><span class="dot adelie"></span>Adelie penguins sampled</div>
+      </div>
+      <div class="stat-card" style="--card-color:var(--chinstrap)">
+        <div class="num">68</div>
+        <div class="label"><span class="dot chinstrap"></span>Chinstrap penguins sampled</div>
+      </div>
+      <div class="stat-card" style="--card-color:var(--gentoo)">
+        <div class="num">119</div>
+        <div class="label"><span class="dot gentoo"></span>Gentoo penguins sampled</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="distribution">
+    <span class="eyebrow">01 &middot; Sample Composition</span>
+    <h2 class="section-title">Species &amp; Island Distribution</h2>
+    <p class="section-intro">
+      After cleaning the dataset, 333 penguins were analyzed. Each species shows a unique
+      island footprint: Adelies live across all three islands, while Chinstraps and Gentoos
+      are found exclusively on a single island.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Species</th>
+            <th class="num">Biscoe</th>
+            <th class="num">Dream</th>
+            <th class="num">Torgersen</th>
+            <th class="num">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="table-species"><span class="dot adelie"></span>Adelie</div></td>
+            <td class="num">44</td>
+            <td class="num">55</td>
+            <td class="num">47</td>
+            <td class="num">146</td>
+          </tr>
+          <tr>
+            <td><div class="table-species"><span class="dot chinstrap"></span>Chinstrap</div></td>
+            <td class="num">0</td>
+            <td class="num">68</td>
+            <td class="num">0</td>
+            <td class="num">68</td>
+          </tr>
+          <tr>
+            <td><div class="table-species"><span class="dot gentoo"></span>Gentoo</div></td>
+            <td class="num">119</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">119</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="figure-single">
+      <figure>
+        <div class="img-container">
+          <img src="./plots/bar_chart.png" alt="Bar chart of penguin counts by species">
+        </div>
+        <figcaption>
+          <strong>Figure 1. Sample count by species.</strong>
+          Adelie is the most common species (146), followed by Gentoo (119) and Chinstrap
+          (68).
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="bill-morphology">
+    <span class="eyebrow">02 &middot; Bill Morphology</span>
+    <h2 class="section-title">Bill Length &amp; Bill Depth</h2>
+    <p class="section-intro">
+      Bill length varies significantly across all three species (p &lt; 0.001). Combining
+      bill length and depth creates a distinct physical signature that easily distinguishes
+      each species.
+    </p>
+
+    <div class="figure-grid">
+      <figure>
+        <div class="img-container">
+          <img src="./plots/forest_plot.png" alt="Forest plot of mean bill length by species with 95% confidence intervals">
+        </div>
+        <figcaption>
+          <strong>Figure 2. Average bill length with 95% CI.</strong>
+          Non-overlapping confidence ranges confirm that Adelie penguins have distinctly
+          shorter bills than Chinstrap and Gentoo.
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="img-container">
+          <img src="./plots/Scatter plot.png" alt="Scatter plot of bill length vs bill depth by species">
+        </div>
+        <figcaption>
+          <strong>Figure 3. Bill length vs. bill depth.</strong>
+          While the overall correlation is weak (r = &minus;0.229), clustering by species is
+          immediately clear.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="body-mass">
+    <span class="eyebrow">03 &middot; Body Mass</span>
+    <h2 class="section-title">Body Mass Distribution</h2>
+    <p class="section-intro">
+      Gentoo penguins are noticeably heavier and vary more in body size than the other two
+      species. Additionally, male penguins are consistently heavier than females across all
+      species.
+    </p>
+
+    <div class="figure-grid">
+      <figure>
+        <div class="img-container">
+          <img src="./plots/violin_plot.png" alt="Violin plot of body mass by species">
+        </div>
+        <figcaption>
+          <strong>Figure 4. Body mass by species.</strong>
+          Gentoo penguins have the highest median weight (&asymp; 5,050 g) and the widest
+          overall weight variation.
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="img-container">
+          <img src="./plots/Boxplot.png" alt="Boxplot of body mass by species and sex">
+        </div>
+        <figcaption>
+          <strong>Figure 5. Body mass by species and sex.</strong>
+          Males weigh more than females in every species, with the largest weight gap found
+          in Gentoos.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="results">
+    <span class="eyebrow">04 &middot; Results</span>
+    <h2 class="section-title">Summary of Findings</h2>
+
+    <article class="results" style="margin-top: 24px;">
+      <p>
+        A total of 333 penguins (after excluding missing observations) were included in the
+        analysis, comprising three species: Adelie (n = 146), Gentoo (n = 119), and
+        Chinstrap (n = 68). The frequency distribution across islands revealed distinct
+        habitat preferences: Adelie penguins were distributed across all three islands
+        (Biscoe: n = 44, Dream: n = 55, Torgersen: n = 47), whereas Chinstrap penguins were
+        found exclusively on Dream Island (n = 68) and Gentoo penguins exclusively on
+        Biscoe Island (n = 119).
+      </p>
+      <p>
+        A one-way ANOVA revealed a statistically significant difference in mean bill length
+        among the three species (p &lt; 0.001). The forest plot indicated that Chinstrap
+        penguins had the highest mean bill length (&asymp; 48.8 mm), followed by Gentoo
+        (&asymp; 47.5 mm), while Adelie penguins exhibited the shortest mean bill length
+        (&asymp; 38.8 mm). The non-overlapping confidence intervals between Adelie and the
+        other two species confirm a clear morphological separation, while the confidence
+        intervals of Chinstrap and Gentoo showed partial overlap, suggesting a comparatively
+        smaller difference between these two species.
+      </p>
+      <p>
+        Body mass distributions, visualized through violin plots, showed that Gentoo
+        penguins were markedly heavier (median &asymp; 5,050 g) than Adelie and Chinstrap
+        (median &asymp; 3,700&ndash;3,750 g), and also displayed the widest spread, indicating
+        greater variability in body size within this species. Sex-disaggregated boxplots
+        further revealed consistent sexual dimorphism across all species, with male
+        penguins showing higher median body mass than females in every group. This
+        difference was most pronounced in Gentoo, where males (median &asymp; 5,500 g) were
+        substantially heavier than females (median &asymp; 4,700 g), while Adelie and
+        Chinstrap showed a comparatively smaller, though still consistent, male-female gap.
+      </p>
+      <p>
+        Bivariate analysis of bill length and bill depth revealed a weak overall correlation
+        between the two measurements (r = &minus;0.229, p &lt; 0.001). Despite this weak
+        pooled correlation, the scatter plot showed clear species-level clustering, with
+        Adelie occupying a region of shorter bill length but relatively higher bill depth,
+        Gentoo characterized by longer bills but lower bill depth, and Chinstrap positioned
+        at intermediate-to-high values for both measurements. This clustering pattern
+        suggests that bill morphology, when considered alongside species identity, provides
+        meaningful discrimination among the three penguin groups, even though the pooled
+        linear correlation alone is weak.
+      </p>
+      <p>
+        Overall, sample composition was uneven across species (Adelie: 146; Gentoo: 119;
+        Chinstrap: 68), which should be considered when interpreting the relative precision
+        of group-wise estimates. Collectively, these findings demonstrate significant
+        interspecies morphological differentiation in both bill dimensions and body mass,
+        along with pronounced sexual dimorphism, consistent with known ecological and
+        species-specific adaptations among Pygoscelis penguins in the Palmer Archipelago.
+      </p>
+    </article>
+  </section>
+
+  <section id="methods">
+    <span class="eyebrow">05 &middot; Methods &amp; Tools</span>
+    <h2 class="section-title">Data Analysis &amp; Reproducibility</h2>
+    <p class="section-intro">
+      All charts and statistical summaries were created from the cleaned Palmer Penguins
+      dataset (n = 333) using standard R and Python packages.
+    </p>
+
+    <div class="methods-grid">
+      <div class="method-card">
+        <h3>R - ggplot2 Workflow</h3>
+        <ul>
+          <li>Species frequency &amp; island distribution counts</li>
+          <li>Forest plot with 95% CI (dplyr summary + ANOVA)</li>
+          <li>Violin plot of body mass distribution</li>
+          <li>Bar chart of total species counts</li>
+          <li>
+            Packages:
+            <span class="tech-pill">palmerpenguins</span>
+            <span class="tech-pill">ggplot2</span>
+            <span class="tech-pill">dplyr</span>
+            <span class="tech-pill">viridis</span>
+          </li>
+        </ul>
+      </div>
+      <div class="method-card">
+        <h3>Python - seaborn Workflow</h3>
+        <ul>
+          <li>Scatter plot comparing bill length vs. bill depth</li>
+          <li>Sex-disaggregated boxplot of body mass</li>
+          <li>Pearson correlation with annotated r and p-values</li>
+          <li>
+            Packages:
+            <span class="tech-pill">seaborn</span>
+            <span class="tech-pill">matplotlib</span>
+            <span class="tech-pill">scipy</span>
+            <span class="tech-pill">pandas</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="citation">
+      <p><strong style="color:var(--text-primary)">Dataset citation</strong></p>
+      <p>Horst, A. M., Hill, A. P., &amp; Gorman, K. B. (2020). palmerpenguins: Palmer
+      Archipelago (Antarctica) penguin data. R package version 0.1.0.
+      <a href="https://allisonhorst.github.io/palmerpenguins/" target="_blank" rel="noopener">https://allisonhorst.github.io/palmerpenguins/</a></p>
+      <p>Gorman, K. B., Williams, T. D., &amp; Fraser, W. R. (2014). Ecological sexual
+      dimorphism and environmental variability within a community of Antarctic penguins
+      (genus Pygoscelis). PLoS ONE, 9(3), e90081.
+      <a href="https://doi.org/10.1371/journal.pone.0090081" target="_blank" rel="noopener">https://doi.org/10.1371/journal.pone.0090081</a></p>
+    </div>
+    <div class="byline">
+      <span>Prepared by Al Amin</span>
+      <span>Code &amp; scripts: <a href="https://github.com" target="_blank" rel="noopener">github.com/&lt;your-username&gt;/palmer-penguins-visualization</a></span>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // Mobile Navigation Toggle
+  const navToggle = document.getElementById('navToggle');
+  const siteNav = document.getElementById('siteNav');
+
+  if (navToggle && siteNav) {
+    navToggle.addEventListener('click', () => {
+      siteNav.classList.toggle('open');
+    });
+
+    // Close menu when a nav link is clicked on mobile
+    const navLinks = siteNav.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        siteNav.classList.remove('open');
+      });
+    });
+  }
+
+  // Active Link Highlighting on Scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    const scrollPosition = window.scrollY + 100;
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
